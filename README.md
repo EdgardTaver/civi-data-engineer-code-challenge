@@ -1,12 +1,14 @@
-Code challenge for Data Engineer. 
+## Code challenge for Data Engineer. 
 
 Using any technology, tool, languages, frameworks that you want, create an ETL (Extract, transform, load) process to extract data.
 
 Create a second database called `dwh` and populate using any ETL strategy to answer these questions: 
 
-How many users are not in any region?
-How many makers does each region have?
-What are the top N regions with the most users?
+- How many users are not in any region?
+
+- How many makers does each region have?
+
+- What are the top N regions with the most users?
 
 You can write the SQL queries to answer these question.
 
