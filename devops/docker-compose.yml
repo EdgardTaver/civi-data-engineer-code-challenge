@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  database:
+    image: postgis/postgis:12-3.0
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - database:/var/lib/postgresql/data
+      - ../data:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  database:
