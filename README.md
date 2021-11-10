@@ -16,7 +16,7 @@ You can show other insights from the data.
 
 There are two data sources, the `users.json` file and the database.
 
-To startup the database server you can run `make up` and connect to `postgres://postgres:postgres@localhost:5432/postgres`. Here you will find two tables `regions` and `markers`.
+To startup the database server you can run `make up` and connect to `postgres://postgres:postgres@localhost:5400/postgres`. Here you will find two tables `regions` and `markers`.
 
 The `users.json` is in data folder.
 
