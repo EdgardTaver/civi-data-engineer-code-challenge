@@ -6,7 +6,7 @@ Create a second database called `dwh` and populate using any ETL strategy to ans
 
 - How many users are not in any region?
 
-- How many makers does each region have?
+- How many markers does each region have?
 
 - What are the top N regions with the most users?
 
