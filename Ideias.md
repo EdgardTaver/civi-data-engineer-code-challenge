@@ -15,11 +15,12 @@ Necessário lidar com coordenadas geográficas.
 ### How many users are not in any region?
 
 O JSON que descreve os users possui coordenadas descritas de forma separada. [Com base nesse artigo](https://naysan.ca/2020/09/28/from-pandas-to-postgis-with-psycopg2/), posso carregar o JSON num DataFrame e converter para o tipo `Geography`, que de acordo com [este link](https://blog.crunchydata.com/blog/postgis-and-the-geography-type) permite fazer consultas geográficas muito mais facilmente. Imagino que já deve existir uma forma pronta de verificar se um dado ponto está dentro de uma região descrita na tabela `regions`.
+> Tem mesmo como verificar se um ponto está dentro de uma região. Basta usar a função `ST_Contains` do PostGIS.
 
 Além disso:
 
 - Verificar o que fazer com os valores nulos. Faria sentido removê-los durante o _transform_?
-- Existem users com latitude null e longigute not null, e vice-versa? O que fazer nestes casos?
+- Existem users com latitude null e longigute I null, e vice-versa? O que fazer nestes casos?
 - Será que faz sentido criar no `dwh` uma tabela que associa cada user a uma `region`? A resposta para a pergunta seria uma query nesta tabela.
 
 ### How many markers does each region have?
