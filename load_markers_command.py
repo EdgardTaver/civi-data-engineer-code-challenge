@@ -51,13 +51,17 @@ class LoadMarkersCommand:
             point = %s
         """
 
+        params = self._translate_row_to_insert_params(row)
+        cursor.execute(insert_statement_base, params)
+
+    def _translate_row_to_insert_params(self, row):
         params = (row["id"],) + (
             row["created_at"],
             row["updated_at"],
             str(row["point"])
         ) * 2
-
-        cursor.execute(insert_statement_base, params)
+        
+        return params
 
     def _get_deleted_markers(self):
         select_deleted_markers_query = """

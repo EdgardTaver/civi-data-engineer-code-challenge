@@ -3,6 +3,8 @@ import logging
 import psycopg2
 import geopandas as gpd
 
+REGIONS_GEOM_COL = "location"
+
 class LoadRegionsCommand:
     def __init__(self, db_connection) -> None:
         self.db_connection = db_connection
@@ -34,7 +36,7 @@ class LoadRegionsCommand:
             """
 
         active_regions = gpd.GeoDataFrame.from_postgis(
-            select_active_regions_query, self.db_connection, geom_col="location")
+            select_active_regions_query, self.db_connection, geom_col=REGIONS_GEOM_COL)
 
         return active_regions
 
@@ -50,14 +52,18 @@ class LoadRegionsCommand:
             location = %s
         """
 
+        params = self._translate_row_to_insert_params(row)
+        cursor.execute(insert_statement_base, params)
+
+    def _translate_row_to_insert_params(self, row):
         params = (row["id"],) + (
             row["created_at"],
             row["updated_at"],
             row["name"],
             str(row["location"])
         ) * 2
-
-        cursor.execute(insert_statement_base, params)
+        
+        return params
 
     def _get_deleted_regions(self):
         select_deleted_regions_query = """
