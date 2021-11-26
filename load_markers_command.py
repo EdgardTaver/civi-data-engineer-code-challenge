@@ -42,20 +42,29 @@ class LoadMarkersCommand:
 
     def _insert_marker(self, row, cursor):
         insert_statement_base = """
-        INSERT INTO dwh.markers (id, created_at, updated_at, point)
-            VALUES (%s, %s, %s, %s)
+        WITH
+        point as (
+            SELECT ST_GeomFromText(%s, 4326) as geometry
+        ),
+        region AS (
+            SELECT name FROM dwh.regions
+            WHERE ST_Contains(location::geometry, (SELECT geometry FROM point))
+        )
+        INSERT INTO dwh.markers (id, created_at, updated_at, point, region)
+            VALUES (%s, %s, %s, %s, (SELECT name FROM region))
         ON CONFLICT (id)
         DO UPDATE SET
             created_at = %s,
             updated_at = %s,
-            point = %s
+            point = %s,
+            region = (SELECT name FROM region)
         """
 
         params = self._translate_row_to_insert_params(row)
         cursor.execute(insert_statement_base, params)
 
     def _translate_row_to_insert_params(self, row):
-        params = (row["id"],) + (
+        params = (str(row["point"]), row["id"]) + (
             row["created_at"],
             row["updated_at"],
             str(row["point"])

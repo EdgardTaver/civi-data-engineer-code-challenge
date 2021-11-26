@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS dwh.markers (
     created_at timestamptz NULL DEFAULT NOW(),
     updated_at timestamptz NULL DEFAULT NOW(),
     deleted_at timestamptz NULL,
-    point GEOGRAPHY(POINT, 4326) NOT NULL
+    point GEOGRAPHY(POINT, 4326) NOT NULL,
+    region TEXT NULL
 );
