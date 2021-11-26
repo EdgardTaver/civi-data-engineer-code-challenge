@@ -102,8 +102,8 @@ if __name__ == "__main__":
 
     try:
         migrator = Migrator(conn, "./migrations")
+        migrator.down_migrate()
         migrator.migrate()
-        # migrator.down_migrate()
 
     except (psycopg2.DatabaseError, NotADirectoryError) as error:
         print(f"Got a nice error: {error}")

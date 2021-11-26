@@ -51,21 +51,31 @@ class UsersLoader:
         return valid_users
         
     def _insert_user(self, row: List, cursor) -> None:
+        # TODO: import regions data to DWH
         insert_statement_base = """
-        INSERT INTO dwh.users(username, phone, point) 
-                VALUES(%s, %s, ST_GeomFromText('POINT(%s %s)', 4326))
+        WITH
+        point as (
+            SELECT ST_GeomFromText('POINT(%s %s)', 4326) as geometry
+        ),
+        region AS (
+            SELECT name FROM public.regions
+            WHERE ST_Contains(location::geometry, (SELECT geometry FROM point))
+        )
+        INSERT INTO dwh.users(username, phone, point, region) 
+                VALUES(%s, %s, (SELECT geometry FROM point), (SELECT name FROM region))
         ON CONFLICT (username) 
         DO
-            UPDATE SET point = ST_GeomFromText('POINT(%s %s)', 4326)
+            UPDATE SET
+            point = (SELECT geometry FROM point),
+            region = (SELECT name FROM region),
+            updated_at = NOW()
         """
 
         params = (
-            row["username"],
-            row["phone"],
             row["longitude"],
             row["latitude"],
-            row["longitude"],
-            row["latitude"]
+            row["username"],
+            row["phone"],
         )
 
         cursor.execute(insert_statement_base, params)
@@ -77,4 +87,3 @@ if __name__ == "__main__":
     path = os.path.join(os.path.dirname(__file__), "data", "users.json")
     loader = UsersLoader(conn, path)
     loader.load()
-        

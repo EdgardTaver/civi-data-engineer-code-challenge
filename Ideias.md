@@ -9,6 +9,7 @@ Necessário lidar com coordenadas geográficas.
 - Este [link](https://blog.crunchydata.com/blog/postgis-and-the-geography-type) explica como funciona o `Geography` do PostGIS.
 
 - Acredito que deve existir alguma extensão do Pandas que permite trabalhar com o `Geography` do PostGIS.
+    > Para evitar maiores complexidades, é melhor só udar o `Geograpyh` diretamente.
 
 ## Perguntas
 
@@ -19,8 +20,10 @@ O JSON que descreve os users possui coordenadas descritas de forma separada. [Co
 
 Além disso:
 
-- Verificar o que fazer com os valores nulos. Faria sentido removê-los durante o _transform_?
-- Existem users com latitude null e longigute I null, e vice-versa? O que fazer nestes casos?
+- [X] Verificar o que fazer com os valores nulos. Faria sentido removê-los durante o _transform_?
+    > Removidos!
+- [X] Existem users com latitude null e longigute I null, e vice-versa? O que fazer nestes casos?
+    > Não existem casos assim.
 - Será que faz sentido criar no `dwh` uma tabela que associa cada user a uma `region`? A resposta para a pergunta seria uma query nesta tabela.
 
 ### How many markers does each region have?
