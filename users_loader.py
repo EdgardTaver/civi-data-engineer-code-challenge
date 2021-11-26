@@ -51,14 +51,13 @@ class UsersLoader:
         return valid_users
         
     def _insert_user(self, row: List, cursor) -> None:
-        # TODO: import regions data to DWH
         insert_statement_base = """
         WITH
         point as (
             SELECT ST_GeomFromText('POINT(%s %s)', 4326) as geometry
         ),
         region AS (
-            SELECT name FROM public.regions
+            SELECT name FROM dwh.regions
             WHERE ST_Contains(location::geometry, (SELECT geometry FROM point))
         )
         INSERT INTO dwh.users (username, phone, point, region) 
