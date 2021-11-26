@@ -2,15 +2,18 @@ import pandas as pd
 import logging
 import psycopg2
 import geopandas as gpd
+from connection import RawDataConnection, DWHConnection
+from typing import List, Tuple
 
 REGIONS_GEOM_COL = "location"
 
 class LoadRegionsCommand:
-    def __init__(self, db_connection) -> None:
-        self.db_connection = db_connection
+    def __init__(self, dwh_connection: DWHConnection, raw_data_connection: RawDataConnection) -> None:
+        self.dwh_connection = dwh_connection
+        self.raw_data_connection = raw_data_connection
     
     def run(self) -> None:
-        cursor = self.db_connection.cursor()
+        cursor = self.dwh_connection.cursor()
 
         try:
             active_regions = self._get_active_regions()
@@ -19,11 +22,11 @@ class LoadRegionsCommand:
             deleted_regions = self._get_deleted_regions()
             deleted_regions.apply(self._delete_region, axis=1, args=(cursor,))
             
-            self.db_connection.commit()
+            self.dwh_connection.commit()
 
         except psycopg2.DatabaseError as error:
             logging.error(f"got db error during loading of regions: {error}")
-            self.db_connection.rollback()
+            self.dwh_connection.rollback()
 
         finally:
             cursor.close()
@@ -36,11 +39,11 @@ class LoadRegionsCommand:
             """
 
         active_regions = gpd.GeoDataFrame.from_postgis(
-            select_active_regions_query, self.db_connection, geom_col=REGIONS_GEOM_COL)
+            select_active_regions_query, self.raw_data_connection, geom_col=REGIONS_GEOM_COL)
 
         return active_regions
 
-    def _insert_region(self, row, cursor):
+    def _insert_region(self, row: List, cursor: psycopg2.extensions.cursor):
         insert_statement_base = """
         INSERT INTO dwh.regions (id, created_at, updated_at, name, location)
             VALUES (%s, %s, %s, %s, %s)
@@ -55,7 +58,7 @@ class LoadRegionsCommand:
         params = self._translate_row_to_insert_params(row)
         cursor.execute(insert_statement_base, params)
 
-    def _translate_row_to_insert_params(self, row):
+    def _translate_row_to_insert_params(self, row: List) -> Tuple:
         params = (row["id"],) + (
             row["created_at"],
             row["updated_at"],
@@ -72,10 +75,10 @@ class LoadRegionsCommand:
             AND deleted_at IS NOT NULL
             """
 
-        deleted_regions = pd.read_sql(select_deleted_regions_query, self.db_connection)
+        deleted_regions = pd.read_sql(select_deleted_regions_query, self.raw_data_connection)
         return deleted_regions
 
-    def _delete_region(self, row, cursor):
+    def _delete_region(self, row: List, cursor: psycopg2.extensions.cursor):
         delete_region_statement_base = """
         DELETE FROM dwh.regions
         WHERE id = %s

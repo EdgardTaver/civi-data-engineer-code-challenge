@@ -1,16 +1,19 @@
+from typing import List, Tuple
 import pandas as pd
 import logging
 import psycopg2
 import geopandas as gpd
+from connection import RawDataConnection, DWHConnection
 
 MARKERS_GEOM_COL = "point"
 
 class LoadMarkersCommand:
-    def __init__(self, db_connection) -> None:
-        self.db_connection = db_connection
+    def __init__(self, dwh_connection: DWHConnection, raw_data_connection: RawDataConnection) -> None:
+        self.dwh_connection = dwh_connection
+        self.raw_data_connection = raw_data_connection
     
     def run(self) -> None:
-        cursor = self.db_connection.cursor()
+        cursor = self.dwh_connection.cursor()
 
         try:
             active_markers = self._get_active_markers()
@@ -19,11 +22,11 @@ class LoadMarkersCommand:
             deleted_markers = self._get_deleted_markers()
             deleted_markers.apply(self._delete_marker, axis=1, args=(cursor,))
             
-            self.db_connection.commit()
+            self.dwh_connection.commit()
 
         except psycopg2.DatabaseError as error:
             logging.error(f"got db error during loading of markers: {error}")
-            self.db_connection.rollback()
+            self.dwh_connection.rollback()
 
         finally:
             cursor.close()
@@ -36,11 +39,11 @@ class LoadMarkersCommand:
             """
 
         active_markers = gpd.GeoDataFrame.from_postgis(
-            select_active_markers_query, self.db_connection, geom_col=MARKERS_GEOM_COL)
+            select_active_markers_query, self.raw_data_connection, geom_col=MARKERS_GEOM_COL)
 
         return active_markers
 
-    def _insert_marker(self, row, cursor):
+    def _insert_marker(self, row: List, cursor: psycopg2.extensions.cursor):
         insert_statement_base = """
         WITH
         point as (
@@ -63,7 +66,7 @@ class LoadMarkersCommand:
         params = self._translate_row_to_insert_params(row)
         cursor.execute(insert_statement_base, params)
 
-    def _translate_row_to_insert_params(self, row):
+    def _translate_row_to_insert_params(self, row: List) -> Tuple:
         params = (str(row["point"]), row["id"]) + (
             row["created_at"],
             row["updated_at"],
@@ -79,10 +82,10 @@ class LoadMarkersCommand:
             AND deleted_at IS NOT NULL
             """
 
-        deleted_markers = pd.read_sql(select_deleted_markers_query, self.db_connection)
+        deleted_markers = pd.read_sql(select_deleted_markers_query, self.raw_data_connection)
         return deleted_markers
 
-    def _delete_marker(self, row, cursor):
+    def _delete_marker(self, row: List, cursor: psycopg2.extensions.cursor):
         delete_marker_statement_base = """
         DELETE FROM dwh.markers
         WHERE id = %s

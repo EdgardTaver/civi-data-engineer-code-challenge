@@ -1,17 +1,17 @@
 import logging
-from types import resolve_bases
 import psycopg2
 import os
 from typing import List
+from connection import DWHConnection
 
 READ_MODE = "r"
 UP_MIGRATION = "up"
 DOWN_MIGRATION = "down"
 
 class Migrator:
-    def __init__(self, db_connection, migrations_path: str) -> None:
+    def __init__(self, dwh_connection: DWHConnection, migrations_path: str) -> None:
         self.migrations_path = migrations_path
-        self.db_connection = db_connection
+        self.dwh_connection = dwh_connection
 
     def migrate_with_clean_start(self) -> None:
         self.migrate_down()
@@ -64,7 +64,7 @@ class Migrator:
         return migration_files
 
     def _do_migrate(self, sorted_migration_files: List) -> None:
-        cursor = self.db_connection.cursor()
+        cursor = self.dwh_connection.cursor()
 
         try:
             for migration_file in sorted_migration_files:
@@ -72,7 +72,7 @@ class Migrator:
                     query = f.read()
                     cursor.execute(query)
 
-            self.db_connection.commit()
+            self.dwh_connection.commit()
 
         except NotADirectoryError as error:
             logging.error(f"got not a directory error during migration: {error}")
@@ -80,7 +80,7 @@ class Migrator:
 
         except psycopg2.DatabaseError as error:
             logging.error(f"got db error during migration: {error}")
-            self.db_connection.rollback()
+            self.dwh_connection.rollback()
             raise error
 
         finally:

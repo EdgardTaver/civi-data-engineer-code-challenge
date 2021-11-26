@@ -2,29 +2,30 @@ import os
 import json
 import pandas as pd
 import psycopg2
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import logging
+from connection import DWHConnection
 
 READ_MODE = "r"
 
 class UsersLoader:
-    def __init__(self, db_connection, file_path:str) -> None:
-        self.db_connection = db_connection
+    def __init__(self, dwh_connection: DWHConnection, file_path: str) -> None:
+        self.dwh_connection = dwh_connection
         self.file_path = file_path
 
     def load(self) -> None:
         json_data = self._load_json_data()
         users = self._build_dataset(json_data)
 
-        cursor = self.db_connection.cursor()
+        cursor = self.dwh_connection.cursor()
 
         try:
             users.apply(self._insert_user, axis=1, args=(cursor,))            
-            self.db_connection.commit()
+            self.dwh_connection.commit()
 
         except psycopg2.DatabaseError as error:
             logging.error(f"got db error: {error}")
-            self.db_connection.rollback()
+            self.dwh_connection.rollback()
 
         finally:
             cursor.close()
@@ -50,7 +51,7 @@ class UsersLoader:
         valid_users = users[position_not_null_mask].copy()
         return valid_users
         
-    def _insert_user(self, row: List, cursor) -> None:
+    def _insert_user(self, row: List, cursor: psycopg2.extensions.cursor) -> None:
         insert_statement_base = """
         WITH
         point as (
@@ -69,14 +70,18 @@ class UsersLoader:
             updated_at = NOW()
         """
 
+        params = self._translate_row_to_insert_params(row)
+        cursor.execute(insert_statement_base, params)
+
+    def _translate_row_to_insert_params(self, row: List) -> Tuple:
         params = (
             row["longitude"],
             row["latitude"],
             row["username"],
             row["phone"],
         )
-
-        cursor.execute(insert_statement_base, params)
+        
+        return params
 
 
 if __name__ == "__main__":
