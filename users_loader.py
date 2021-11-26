@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import psycopg2
 from typing import List, Dict
+import logging
 
 READ_MODE = "r"
 
@@ -22,8 +23,7 @@ class UsersLoader:
             self.db_connection.commit()
 
         except psycopg2.DatabaseError as error:
-            # TODO: log error
-            print(f"got db during insertion error: {error}")
+            logging.error(f"got db error: {error}")
             self.db_connection.rollback()
 
         finally:
