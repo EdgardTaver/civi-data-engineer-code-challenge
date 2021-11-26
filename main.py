@@ -7,6 +7,7 @@ from dotenv import find_dotenv, load_dotenv
 from migrator import Migrator
 from users_loader import UsersLoader
 from load_regions_command import LoadRegionsCommand
+from load_markers_command import LoadMarkersCommand
 
 if __name__ == "__main__":
     load_dotenv(find_dotenv())
@@ -28,6 +29,9 @@ if __name__ == "__main__":
 
         load_regions_command = LoadRegionsCommand(db_connection)
         load_regions_command.run()
+
+        load_markers_command = LoadMarkersCommand(db_connection)
+        load_markers_command.run()
 
         users_loader = UsersLoader(db_connection, users_data_path)
         users_loader.load()
