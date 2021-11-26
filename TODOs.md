@@ -1,6 +1,5 @@
 # TODOs
 
-- [ ] Query para segunda pergunta.
 - [ ] Criar outro banco de dados, em vez de outro schema.
 - [ ] Montar script final com o fluxo inteiro.
 - [ ] Colocar `requirements.txt` certinho.
@@ -9,6 +8,7 @@
 - [ ] Implementar visualizações gráficas.
 - [ ] Algum outro insight dos dados?
 - [ ] Lidar com deleção de usuários na base de users.
+- [X] Query para segunda pergunta.
 - [X] Carregar dados de markers na DWH.
 - [X] Carregar dados de regions na DWH.
 - [X] Implementar logging.
