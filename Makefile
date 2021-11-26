@@ -11,3 +11,6 @@ logs:
 sh: 
 	@ docker-compose -f devops/docker-compose.yml --project-name data-engineer-code-challenge  \
 		exec database sh
+
+run:
+	python3 main.py

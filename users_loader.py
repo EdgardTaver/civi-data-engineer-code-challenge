@@ -61,11 +61,10 @@ class UsersLoader:
             SELECT name FROM public.regions
             WHERE ST_Contains(location::geometry, (SELECT geometry FROM point))
         )
-        INSERT INTO dwh.users(username, phone, point, region) 
-                VALUES(%s, %s, (SELECT geometry FROM point), (SELECT name FROM region))
+        INSERT INTO dwh.users (username, phone, point, region) 
+            VALUES(%s, %s, (SELECT geometry FROM point), (SELECT name FROM region))
         ON CONFLICT (username) 
-        DO
-            UPDATE SET
+        DO UPDATE SET
             point = (SELECT geometry FROM point),
             region = (SELECT name FROM region),
             updated_at = NOW()
