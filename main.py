@@ -26,11 +26,11 @@ if __name__ == "__main__":
         migrator = Migrator(db_connection, migrations_path)
         migrator.migrate_with_clean_start()
 
-        users_loader = UsersLoader(db_connection, users_data_path)
-        users_loader.load()
-
         load_regions_command = LoadRegionsCommand(db_connection)
         load_regions_command.run()
+
+        users_loader = UsersLoader(db_connection, users_data_path)
+        users_loader.load()
 
     except Exception as error:
         logging.error(f"got error during full DWH process: {error}")
