@@ -32,6 +32,7 @@ Good luck!
 
 - Must have **Python 3.8.3** or higher installed.
 - Run `make install` to create python dependencies.
+- Configure the DWH pipeline in the `.env` file. For the sake of simplicity, the `.env` provided already has all the necessary params configured, but it may be changed freely if you want to.
 
 ## How to run
 
