@@ -125,6 +125,9 @@ Parque do Carmo | 4     |
     - If a _User_ has `NULL` latitude or `NULL` longitude, it is considered an invalid entity and it will not be added to _DWH_.
     - The position of a _User_ may be **updated** at any time. Therefore, if we attempt to insert a user into _DWH_, but the username already exists, then its position must be updated.
 
+- The following assumptions were considered for _Markers_:
+    - Only a single marker is allowed for a given `latitude` and `longitude`. If there's more than one marker for the exact same coordinates, then only the first will be loaded into _DWH_.
+
 - The following assumptions were considered for _Regions_ and _Markers_:
     - Only soft deletions are allowed (entities are not really dropped from the database).
     - The soft-delete is done by setting the `deleted_at` field to a valid date.

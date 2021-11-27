@@ -43,6 +43,7 @@ class LoadMarkersCommand:
         active_markers = gpd.GeoDataFrame.from_postgis(
             select_active_markers_query, self.raw_data_connection, geom_col=MARKERS_GEOM_COL)
 
+        active_markers = active_markers.drop_duplicates(subset="point")
         return active_markers
 
     def _insert_marker(self, row: List, cursor: psycopg2.extensions.cursor):
