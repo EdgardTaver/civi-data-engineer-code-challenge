@@ -1,12 +1,12 @@
 # TODOs
 
-- [ ] Montar script final com o fluxo inteiro.
-- [ ] Colocar `requirements.txt` certinho.
-- [ ] Colocar venv certinho.
-- [ ] Colocar instruções de como rodar tudo.
 - [ ] Implementar visualizações gráficas.
 - [ ] Algum outro insight dos dados?
-- [ ] Lidar com deleção de usuários na base de users.
+- [X] Lidar com deleção de usuários na base de users [DROPPED].
+- [X] Montar script final com o fluxo inteiro.
+- [X] Colocar `requirements.txt` certinho.
+- [X] Colocar venv certinho [DROPPED].
+- [X] Colocar instruções de como rodar tudo.
 - [X] Criar script para dropar o DWH.
 - [X] Criar outro banco de dados, em vez de outro schema.
 - [X] Query para segunda pergunta.
