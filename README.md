@@ -86,11 +86,11 @@ Expected result:
 
 region             | count|
 -------------------|------|
-República          | 43   |
-Bom Retiro         | 31   |
-Jabaquara          | 26   |
+República          | 41   |
+Bom Retiro         | 28   |
 Cachoeirinha       | 25   |
-Santana            | 24   |
+Jabaquara          | 25   |
+Brasilândia        | 23   |
 _90 more rows_     | ...  |
 
 ### 3. What are the top N regions with the most users?
