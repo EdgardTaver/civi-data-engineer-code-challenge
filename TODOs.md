@@ -7,6 +7,7 @@
 - [ ] Implementar visualizações gráficas.
 - [ ] Algum outro insight dos dados?
 - [ ] Lidar com deleção de usuários na base de users.
+- [X] Criar script para dropar o DWH.
 - [X] Criar outro banco de dados, em vez de outro schema.
 - [X] Query para segunda pergunta.
 - [X] Carregar dados de markers na DWH.

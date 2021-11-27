@@ -1,7 +1,6 @@
 import os
 import logging
 
-import psycopg2
 from dotenv import find_dotenv, load_dotenv
 
 from migrator import Migrator
@@ -24,11 +23,11 @@ if __name__ == "__main__":
     log_level = logging.DEBUG if log_level_from_env == "debug" else logging.INFO
     logging.basicConfig(level=log_level, format=log_format)
 
-    main_connection = MainConnection(conn_string)
-    dwh_connection = DWHConnection(main_connection, dwh_dbname)
-    raw_data_connection = RawDataConnection(main_connection, raw_data_dbname)
-
     try:
+        main_connection = MainConnection(conn_string)
+        dwh_connection = DWHConnection(main_connection, dwh_dbname)
+        raw_data_connection = RawDataConnection(main_connection, raw_data_dbname)
+
         migrator = Migrator(dwh_connection, migrations_path)
         migrator.migrate_with_clean_start()
 
@@ -48,4 +47,4 @@ if __name__ == "__main__":
     except Exception as error:
         logging.error(f"got error during full DWH process: {error}")
     
-    logging.info("everything fine")
+    logging.info("DWH fully loaded")

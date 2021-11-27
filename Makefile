@@ -12,5 +12,13 @@ sh:
 	@ docker-compose -f devops/docker-compose.yml --project-name data-engineer-code-challenge  \
 		exec database sh
 
-run:
+.DEFAULT_GOAL := help
+
+help: ## prints this help
+	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+run: ## run main dwh process
 	python3 main.py
+
+drop: ## drops dwh database
+	python3 drop_dwh.py
