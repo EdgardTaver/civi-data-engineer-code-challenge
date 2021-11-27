@@ -8,7 +8,7 @@ from connection import DWHConnection
 
 READ_MODE = "r"
 
-class UsersLoader:
+class LoadUsersCommand:
     def __init__(self, dwh_connection: DWHConnection, file_path: str) -> None:
         self.dwh_connection = dwh_connection
         self.file_path = file_path
@@ -88,5 +88,5 @@ if __name__ == "__main__":
     conn = psycopg2.connect("postgres://postgres:postgres@localhost:5400/postgres")
 
     path = os.path.join(os.path.dirname(__file__), "data", "users.json")
-    loader = UsersLoader(conn, path)
+    loader = LoadUsersCommand(conn, path)
     loader.load()

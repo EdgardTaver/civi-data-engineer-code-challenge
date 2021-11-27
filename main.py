@@ -4,7 +4,7 @@ import logging
 from dotenv import find_dotenv, load_dotenv
 
 from migrator import Migrator
-from users_loader import UsersLoader
+from load_users_command import LoadUsersCommand
 from load_regions_command import LoadRegionsCommand
 from load_markers_command import LoadMarkersCommand
 from connection import MainConnection, RawDataConnection, DWHConnection
@@ -37,7 +37,7 @@ if __name__ == "__main__":
         load_markers_command = LoadMarkersCommand(dwh_connection, raw_data_connection)
         load_markers_command.run()
 
-        users_loader = UsersLoader(dwh_connection, users_data_path)
+        users_loader = LoadUsersCommand(dwh_connection, users_data_path)
         users_loader.load()
 
         main_connection.close()
