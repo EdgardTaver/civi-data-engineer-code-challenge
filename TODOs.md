@@ -1,11 +1,11 @@
 # TODOs
 
-- [ ] Implementar visualizações gráficas.
-- [ ] Algum outro insight dos dados?
-- [X] Lidar com deleção de usuários na base de users [DROPPED].
+- [X] Implementar visualizações gráficas.
+- [X] Algum outro insight dos dados? [DROPPED]
+- [X] Lidar com deleção de usuários na base de users. [DROPPED]
 - [X] Montar script final com o fluxo inteiro.
 - [X] Colocar `requirements.txt` certinho.
-- [X] Colocar venv certinho [DROPPED].
+- [X] Colocar venv certinho. [DROPPED]
 - [X] Colocar instruções de como rodar tudo.
 - [X] Criar script para dropar o DWH.
 - [X] Criar outro banco de dados, em vez de outro schema.
