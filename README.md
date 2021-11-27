@@ -60,7 +60,6 @@ Query:
 ```sql
 SELECT COUNT(id) AS users_not_in_any_region FROM dwh.users
 WHERE 1=1
-AND deleted_at IS NULL
 AND region IS NULL
 ```
 
@@ -100,9 +99,7 @@ Query:
 ```sql
 WITH params AS (SELECT 5 AS N)
 SELECT region, count(region) FROM dwh.users
-WHERE 1=1
-	AND deleted_at IS NULL
-	AND region IS NOT NULL 
+WHERE region IS NOT NULL 
 GROUP BY region
 ORDER BY 2 DESC
 LIMIT (SELECT N FROM params)
@@ -149,3 +146,7 @@ The process to load _Users_ ensures idempotence by assuming that the username is
 If we assume that this file is the main source of data for _Users_, and that if a given username is removed from it, we should remove it from the DWH, then we could implement an additional step in the `LoadUsersCommand` in which it compares the full table from DWH and the full table obtained in the JSON (for instance: using the `.isin()` method from `pandas`) and checks the usernames that could not be found in the JSON.
 
 All tables in the DWH have a `deleted_at` column. This makes the DWH consistent with the data models found in the raw data, which is a good thing (consider that analysts and developers may query both the raw data as well as the DWH expecting similar attributes and logic). But since we have defined that a soft deleted `Region` and `Marker` means an invalid entity, which is _not_ loaded in the DWH, and there's no mechanism to handle deletion of `Users`, then there's really **no** use for the `delete_at` attribute in the DWH tables.
+
+## View
+
+A basic visualization of the queries are available as a Jupyter Notebook (`view.ipynb`) and a PDF file (`view.pdf`).
