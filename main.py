@@ -1,13 +1,13 @@
-import os
 import logging
+import os
 
 from dotenv import find_dotenv, load_dotenv
 
-from migrator import Migrator
-from load_users_command import LoadUsersCommand
-from load_regions_command import LoadRegionsCommand
+from connection import DWHConnection, MainConnection, RawDataConnection
 from load_markers_command import LoadMarkersCommand
-from connection import MainConnection, RawDataConnection, DWHConnection
+from load_regions_command import LoadRegionsCommand
+from load_users_command import LoadUsersCommand
+from migrator import Migrator
 
 if __name__ == "__main__":
     load_dotenv(find_dotenv())

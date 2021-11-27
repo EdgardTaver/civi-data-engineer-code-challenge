@@ -1,9 +1,11 @@
-import pandas as pd
 import logging
-import psycopg2
-import geopandas as gpd
-from connection import RawDataConnection, DWHConnection
 from typing import List, Tuple
+
+import geopandas as gpd
+import pandas as pd
+import psycopg2
+
+from connection import DWHConnection, RawDataConnection
 
 REGIONS_GEOM_COL = "location"
 

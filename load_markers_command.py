@@ -1,9 +1,11 @@
-from typing import List, Tuple
-import pandas as pd
 import logging
-import psycopg2
+from typing import List, Tuple
+
 import geopandas as gpd
-from connection import RawDataConnection, DWHConnection
+import pandas as pd
+import psycopg2
+
+from connection import DWHConnection, RawDataConnection
 
 MARKERS_GEOM_COL = "point"
 

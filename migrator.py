@@ -1,7 +1,9 @@
 import logging
-import psycopg2
 import os
 from typing import List
+
+import psycopg2
+
 from connection import DWHConnection
 
 READ_MODE = "r"

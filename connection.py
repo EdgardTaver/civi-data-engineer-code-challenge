@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
+
 class Connection:
     def get_connection(self) -> psycopg2.extensions.connection:
         raise NotImplementedError()

@@ -1,7 +1,9 @@
-import os
 import logging
-from connection import MainConnection, DWHConnection
+import os
+
 from dotenv import find_dotenv, load_dotenv
+
+from connection import DWHConnection, MainConnection
 
 if __name__ == "__main__":
     load_dotenv(find_dotenv())

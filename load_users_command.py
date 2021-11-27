@@ -1,9 +1,11 @@
-import os
 import json
+import logging
+import os
+from typing import Dict, List, Tuple
+
 import pandas as pd
 import psycopg2
-from typing import List, Dict, Tuple
-import logging
+
 from connection import DWHConnection
 
 READ_MODE = "r"
